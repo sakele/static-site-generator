@@ -23,8 +23,8 @@ class HTMLNode:
         for prop in self.props:
             string += f' {prop}="{self.props[prop]}"'
         return string
-    
-            
+
+
 class LeafNode(HTMLNode):
     def __init__(
         self,
@@ -48,3 +48,30 @@ class LeafNode(HTMLNode):
         
         html = f"<{self.tag}" + self.props_to_html() + f">{self.value}</{self.tag}>"
         return html
+
+class ParentNode(HTMLNode):
+    def __init__(
+        self,
+        tag: str,
+        children: list["HTMLNode"],
+        props: dict[str, str] | None = None
+    ) -> None:
+        
+        super().__init__(tag, None, children, props)
+
+    def __repr__(self) -> str:
+        return f"ParentNode({self.tag}, children: {self.children}, {self.props})"
+
+    def to_html(self):
+        if not self.tag:
+            raise ValueError("invalid HTML: no tag")
+        if not self.children:
+            raise ValueError("invalid HTML: no children")
+        
+        if not self.props:
+            html = f"<{self.tag}>"
+        else:
+            html = f"<{self.tag}" + self.props_to_html() + ">"
+        for child in self.children:
+                html += child.to_html()
+        return html + f"</{self.tag}>"
