@@ -1,10 +1,9 @@
 import os, shutil
-from textnode import TextNode, TextType
+from gencontent import generate_page
 
 def main():
-    text_node = TextNode("This is some anchor text", TextType.LINK, "https://boot.dev")
-    print(text_node)
     copy_dir("./static", "./public")
+    generate_page("./content/index.md", "./template.html", "./public/index.html")
 
 def copy_dir(source, destination):
     if not os.path.exists(source):
@@ -22,7 +21,5 @@ def copy_dir(source, destination):
             shutil.copy(source_subpath, destination)
         else:
             copy_dir(source_subpath, destination_subpath)
-        
-    
 
 main()
